@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import BurningAirlines from './components/BurningAirlines';
+import Routes from './Routes';
 
 ReactDOM.render(
-  <BurningAirlines />,
+  Routes,
   document.getElementById('root')
 );
