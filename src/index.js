@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App';
-import registerServiceWorker from './registerServiceWorker';
+import BurningAirlines from './components/BurningAirlines';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+ReactDOM.render(
+  <BurningAirlines />,
+  document.getElementById('root')
+);
