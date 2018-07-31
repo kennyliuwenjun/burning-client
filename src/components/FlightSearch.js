@@ -1,138 +1,92 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-import 'react-datepicker/dist/react-datepicker.css';
-
 import './FlightSearch.css';
 
-class FlightSearch  extends Component {
+class FlightSearch extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      returnTrip: true,
-      departureDate: moment(),
-      returnDate: moment().add(1, 'day'),
-      passengers: 1
-    }
-  }
-  handleTrip(tab) {
-      let returnTrip = (tab === 1) ? false : true;
-      this.setState({returnTrip});
-    }
-
-    changeDepartureDate(departureDate) {
-      this.setState({departureDate: moment(departureDate._d)});
-    }
-
-    changeReturnDate(returnDate) {
-      this.setState({returnDate: moment(returnDate._d)});
-    }
-
-    incrementPassengers() {
-      this.setState({
-        passengers: this.state.passengers + 1
-      });
-    }
-
-    decrementPassengers() {
-      if (this.state.passengers > 0) {
-        this.setState({
-          passengers: this.state.passengers - 1
-        });
+      flights: [
+        {
+          id: 3,
+          flight_number: "BA213",
+          from: "Sydney",
+          to: "Melbourne",
+          rows: 6,
+          columns: 6,
+          seats_left: 35
+        }, {
+          id: 4,
+          flight_number: "B123",
+          from: "Sydney",
+          to: "Melbourne",
+          rows: 6,
+          columns: 6,
+          seats_left: 36
+        }
+      ],
+      searchString: {
+        from: "SYD",
+        to: "MEL"
       }
-    }
+    };
+    // this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
 
-    handleSearch(event) {
-      const { store } = this.context;
-      store.dispatch({
-        type: 'ALL',
-        returnTrip: this.state.returnTrip,
-        originCity: this.originCity.value,
-        destinationCity: this.destinationCity.value,
-        departureDate: this.state.departureDate,
-        returnDate: this.state.returnDate,
-        passengers: this.state.passengers,
-        // price: this.state.price
-      });
-      event.preventDefault();
-    }
-  render() {
-    return (
-      <div className="search__box">
-        <ul className="tabs">
-          <li className={"tab" + (this.state.returnTrip ? '' : ' active')}
-            onClick={this.handleTrip.bind(this, 1)}>One way</li>
-          <li className={"tab" + (this.state.returnTrip ? ' active' : '')}
-            onClick={this.handleTrip.bind(this, 2)}>Return</li>
-        </ul>
-
-        <form className="form" onSubmit={this.handleSearch.bind(this)}>
-          <input
-            className="input block"
-            type="text"
-            placeholder="Enter Origin City"
-            ref={node => {
-              this.originCity = node;
-            }} />
-
-          <input
-            className="input block"
-            type="text"
-            placeholder="Enter Destination City"
-            ref={node => {
-              this.destinationCity = node;
-            }} />
-
-            <br />
-            <br />
-          <div>
-            <label className="block">Departure date</label>
-            <DatePicker
-              className="input"
-              selected={this.state.departureDate}
-              onChange={this.changeDepartureDate.bind(this)} />
-          </div>
-
-          <br />
-
-          { this.state.returnTrip &&
-          <div>
-            <label className="block">Return date</label>
-            <DatePicker
-              className="input"
-              selected={this.state.returnDate}
-              onChange={this.changeReturnDate.bind(this)} />
-            </div>
-          }
-
-          <div className="passengers">
-            <span className="passenger__count">{this.state.passengers} passenger</span>
-
-            <button
-              type="button"
-              className="button"
-              onClick={this.decrementPassengers.bind(this)}>
-              -
-            </button>
-
-            <button
-              type="button"
-              className="button"
-              onClick={this.incrementPassengers.bind(this)}>
-              +
-            </button>
-          </div>
-
-          <button className="form__submit" type="submit">Search</button>
-
-        </form>
-
-      </div>
-    );
   }
+
+  // _handleInput(event) {
+  //   this.setState({flights: event.target.value});
+  // }
+
+  componentDidMount() {
+
+    const flightString = this.setState({searchString: flightString});
+  }
+
+  _handleSubmit(event) {
+    event.preventDefault();
+    //debugger;
+    // this.props.onSubmit(this.state.flights);
+
+    console.log(this.state.flights);
+    const Search = {
+      originCity: this.originCity.value,
+      destinationCity: this.destinationCity.value
+
+    }
+
+    // call api to find flights here
+    console.log(Search);
+
+  }
+  render() {
+    return (<div className="search__box">
+
+      <form className="form" onSubmit={this._handleSubmit}>
+        <input className="input block" type="Search" placeholder="Enter Origin City" ref={node => {
+            this.originCity = node;
+          }}/>
+
+        <input className="input block" type="Search" placeholder="Enter Destination City" ref={node => {
+            this.destinationCity = node;
+          }}/>
+
+        <button className="form__submit" type="submit">Search</button>
+
+      </form>
+      <ShowFlights flights={this.state.flights} />
+    </div>);
+  }
+}
+
+class ShowFlights extends Component {
+
+  render() {
+    return (<div>{this.props.flights.map((f)=> <div>{f.flight_number}</div>)}</div>);
+  }
+
 }
 
 export default FlightSearch;
