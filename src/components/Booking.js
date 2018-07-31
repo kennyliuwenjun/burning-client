@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import BAapi from '../utilities/BAapi'
+import axios from 'axios';
+
+function Square(props) {
+  return (
+    <button className="square" onClick={function(){
+      console.log('hihi');
+    }}>
+    </button>
+  );
+}
 
 class Booking extends Component {
-
-
-  fetchData(){
-    //do a axios request, fetch data from back end in json format
-    //do some processs convert the json data to 'state' by doing this.setState(bla bla)
-  }
-
   constructor(){
     super();
     this.state = {
@@ -27,9 +31,28 @@ class Booking extends Component {
       seats: [
         [false,false,false],
         [false,false,false],
+        [false,false,false],
         [false,false,false]
       ]
     };
+
+  }
+
+  renderSquare(i) {
+    return (
+      <Square
+        value={2}
+        onClick={() => console.log(1)}
+      />
+    );
+  }
+
+  renderColumn(column){
+    return (
+      <div className="board-row">
+        {column.map(Square)}
+      </div>
+    );
   }
 
   render() {
@@ -45,9 +68,7 @@ class Booking extends Component {
         </div>
 
         <div>
-          {this.state.seats.map( function (column){
-            column.map(row => <p>{ 'avaliable' }</p> )
-          })}
+          {this.state.seats.map(this.renderColumn)}
         </div>
       </div>
     )
