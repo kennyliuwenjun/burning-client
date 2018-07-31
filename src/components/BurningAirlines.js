@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import Booking from './Booking';
 
 class BurningAirlines extends Component {
   render() {
     return (
-      <div>
-        <h1>BurningAirlines Coming</h1>
-      </div>
+      <Booking />
     );
   }
 }
