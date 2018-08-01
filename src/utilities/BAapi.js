@@ -3,8 +3,8 @@ import axios from 'axios';
 const SERVER_URL = 'https://thawing-headland-81437.herokuapp.com';
 
 class BAapi {
-  searchFlight(id) {
-    //kenny
+  getFlightInfo(id, callback) {
+    axios.get(`${SERVEL_URL}/flights/${id}.json`).then( callback );
   };
 
   searchFlights(data, callback) {

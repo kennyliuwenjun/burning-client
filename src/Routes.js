@@ -9,7 +9,7 @@ const Routes = (
   <BrowserRouter>
     <div>
       <Route exact path="/" component={ BurningAirlines } />
-      <Route exact path="/booking" component={ Booking } />
+      <Route exact path="/booking/:id" component={ Booking } />
       <Route exact path="/flight_search" component={ FlightSearch } />
       <Route exact path="/login" component={ Login } />
     </div>

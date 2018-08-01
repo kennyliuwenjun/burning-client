@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
 import BAapi from '../utilities/BAapi'
-import axios from 'axios';
 
-function Square(props) {
-  return (
-    <button className="square" onClick={function(){
-      console.log('hihi');
-    }}>
-    </button>
-  );
-}
 
 class Booking extends Component {
-  constructor(){
+  constructor(props){
     super();
     this.state = {
       //testing data
@@ -20,40 +11,39 @@ class Booking extends Component {
         id: 1,
         name: 'Bob',
       },
-      flight: {
-        id: 3,
-        plane_id: 2,
-        flight_number: '09',
-        date: '3/8/13',
-        from: 'JFK',
-        to: 'SFO'
-      },
-      seats: [
-        [false,false,false],
-        [false,false,false],
-        [false,false,false],
-        [false,false,false]
-      ]
+      flight: {},
+      seatsInRow: [],
+      selectedSeat : ""
     };
 
+    const api = new BAapi();
+    api.getFlightInfo(props.match.params.id,(results) => {
+      const seatsInRow = new Array(results.data.rows);
+      for (let i = 0; i < seatsInRow.length; i++) {
+        seatsInRow[i] = new Array(results.data.columns);
+        seatsInRow[i].fill(i);
+      }
+      this.setState({
+        flight : results.data,
+        seatsInRow,
+      });
+    });
   }
 
-  renderSquare(i) {
-    return (
-      <Square
-        value={2}
-        onClick={() => console.log(1)}
-      />
-    );
+  checkActiveBtn(btn){
+    return (btn == this.state.selectedSeat) ? "square selected" : "square";
   }
 
-  renderColumn(column){
-    return (
-      <div className="board-row">
-        {column.map(Square)}
-      </div>
-    );
+  seatName(columnIndex, rowIndex){
+    return String.fromCharCode(65 + columnIndex)+(rowIndex+1);
   }
+
+  _onSelectSeat(e){
+    this.setState({
+      selectedSeat : e,
+    });
+  }
+
 
   render() {
     return (
@@ -64,11 +54,31 @@ class Booking extends Component {
         </div>
 
         <div>
-          <p>BurningAirlines WDI28</p>
+          <p>Flight Number: {this.state.flight.flight_number}</p>
         </div>
 
         <div>
-          {this.state.seats.map(this.renderColumn)}
+          {this.state.seatsInRow.map((row,rowIndex) => {
+            return (
+              <div key={rowIndex} className="board-row">
+                {row.map((column,columnIndex) => {
+                  return (
+                    <button key={columnIndex} className = {this.checkActiveBtn(this.seatName(columnIndex, rowIndex))} onClick={(e)=>{
+                      this._onSelectSeat(this.seatName(columnIndex, rowIndex));
+                    }}> {this.seatName(columnIndex, rowIndex)}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+
+        <div>
+          <button onClick={function(){
+            console.log('do submit api request');
+          }}>Submit
+          </button>
         </div>
       </div>
     )
