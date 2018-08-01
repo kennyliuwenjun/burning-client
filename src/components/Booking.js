@@ -81,7 +81,7 @@ class Booking extends Component {
       <div>
         <div>
           <p>Search</p>
-          <p>{this.state.user.name}</p>
+          <p>{ !this.state.user || this.state.user.name }</p>
         </div>
 
         <div>

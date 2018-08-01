@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import BurningAirlines from './components/BurningAirlines';
 import Booking from './components/Booking';
 import FlightSearch from './components/FlightSearch'
@@ -7,15 +7,19 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 
 const Routes = (
-  <BrowserRouter basename={process.env.PUBLIC_URL}>
+  // <Router basename={process.env.PUBLIC_URL}>
+  <Router>
     <div>
-      <Route exact path="/" component={ BurningAirlines } />
-      <Route exact path="/booking/:id" component={ Booking } />
-      <Route exact path="/flight_search" component={ FlightSearch } />
-      <Route exact path="/login" component={ Login } />
-      <Route exact path="/signup" component={ SignUp } />
+      <Switch>
+        <Route exact path="/" component={ BurningAirlines } />
+        <Route path="/booking/:id" component={ Booking } />
+        <Route path="/flight_search" component={ FlightSearch } />
+        <Route path="/login" component={ Login } />
+        <Route path="/signup" component={ SignUp } />
+        <Route exact path="/*" component={BurningAirlines} />
+      </Switch>
     </div>
-  </BrowserRouter>
+  </Router>
 );
 
 export default Routes;

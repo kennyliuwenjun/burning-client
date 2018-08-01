@@ -59,7 +59,7 @@ class SignUp extends Component {
   render() {
     if (this.state.user.id !== undefined) {
       return (
-        <Redirect to={{
+        <Redirect push to={{
           pathname: "/flight_search",
           state: { referrer: this.state.user }}} />
       )
