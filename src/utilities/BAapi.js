@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const SERVER_URL = 'https://thawing-headland-81437.herokuapp.com';
+// const SERVER_URL = 'http://localhost:3001';
 
 class BAapi {
   //kenny
@@ -19,6 +20,11 @@ class BAapi {
   login(data, callback) {
     const loginURL = SERVER_URL + '/login.json'
     axios.post( loginURL, data ).then(callback);
+  };
+
+  signUp(data, callback) {
+    const signupURL = SERVER_URL + '/users.json'
+    axios.post(signupURL, data).then(callback);
   };
 
   //kenny

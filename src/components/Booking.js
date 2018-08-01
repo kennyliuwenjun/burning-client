@@ -115,7 +115,7 @@ class Booking extends Component {
               const data = {
                  reservation: {
                     flight_id: this.state.flight.id,
-                    user_id: 2,
+                    user_id: this.state.user.id,
                     seat_row: this.state.selectedSeat.row,
                     seat_column: this.state.selectedSeat.column
                  }
