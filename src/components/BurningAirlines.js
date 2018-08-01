@@ -12,6 +12,9 @@ class BurningAirlines extends Component {
         <div>
           <Link to="/booking">Booking</Link>
         </div>
+        <div>
+          <Link to="/login">Booking</Link>
+        </div>
       </div>
     );
   }
