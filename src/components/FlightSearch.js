@@ -5,31 +5,15 @@ import './FlightSearch.css';
 class FlightSearch extends Component {
   constructor(props) {
     super(props);
+    // get user info from props if available
+    let user;
+    if (props.location.state && props.location.state.referrer) {
+      user = props.location.state.referrer;
+    }
 
     this.state = {
-      flights: [
-        {
-          id: 3,
-          flight_number: "BA213",
-          from: "Sydney",
-          to: "Melbourne",
-          rows: 6,
-          columns: 6,
-          seats_left: 35
-        }, {
-          id: 4,
-          flight_number: "B123",
-          from: "Sydney",
-          to: "Melbourne",
-          rows: 6,
-          columns: 6,
-          seats_left: 36
-        }
-      ],
-      searchString: {
-        from: "SYD",
-        to: "MEL"
-      }
+      flights: [],
+      user: !user ? null : user // store user info in state if available
     };
     // this._handleSubmit = this._handleSubmit.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
