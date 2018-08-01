@@ -1,3 +1,4 @@
+//Kenny
 import React, { Component } from 'react';
 import BAapi from '../utilities/BAapi'
 
@@ -6,17 +7,33 @@ class Booking extends Component {
   constructor(props){
     super();
     this.state = {
-      //testing data
+      //testing user
       user: {
         id: 1,
         name: 'Bob',
       },
       flight: {},
       seatsInRow: [],
-      selectedSeat : ""
+      selectedSeat : {}
     };
 
     const api = new BAapi();
+    const fetchFlight = () => {
+      api.getFlightInfo(props.match.params.id,(results) => {
+        const seatsInRow = new Array(results.data.rows);
+        for (let i = 0; i < seatsInRow.length; i++) {
+          seatsInRow[i] = new Array(results.data.columns);
+          seatsInRow[i].fill(i);
+        }
+        this.setState({
+          flight : results.data,
+          seatsInRow,
+        });
+        setTimeout(fetchFlight, 2000);
+      });
+    }
+    fetchFlight();
+
     api.getFlightInfo(props.match.params.id,(results) => {
       const seatsInRow = new Array(results.data.rows);
       for (let i = 0; i < seatsInRow.length; i++) {
@@ -30,18 +47,29 @@ class Booking extends Component {
     });
   }
 
-  checkActiveBtn(btn){
-    return (btn == this.state.selectedSeat) ? "square selected" : "square";
+  checkActiveBtn(column, row){
+    return (column === this.state.selectedSeat.column && row === this.state.selectedSeat.row) ? "square selected" : "square";
   }
 
   seatName(columnIndex, rowIndex){
     return String.fromCharCode(65 + columnIndex)+(rowIndex+1);
   }
 
-  _onSelectSeat(e){
+  _onSelectSeat(column, row){
     this.setState({
-      selectedSeat : e,
+      selectedSeat:{
+        column,
+        row
+      }
     });
+  }
+
+  checkReservation(column, row){
+    for (let i=0; i<this.state.flight.reservations.length; i++) {
+      if (this.state.flight.reservations[i].column === column && this.state.flight.reservations[i].row === row){
+        return true;
+      };
+    }
   }
 
 
@@ -61,10 +89,14 @@ class Booking extends Component {
           {this.state.seatsInRow.map((row,rowIndex) => {
             return (
               <div key={rowIndex} className="board-row">
-                {row.map((column,columnIndex) => {
+                {row.map((column, columnIndex) => {
                   return (
-                    <button key={columnIndex} className = {this.checkActiveBtn(this.seatName(columnIndex, rowIndex))} onClick={(e)=>{
-                      this._onSelectSeat(this.seatName(columnIndex, rowIndex));
+                    <button
+                      key={columnIndex}
+                      className = {this.checkActiveBtn(columnIndex+1, rowIndex+1)}
+                      disabled = {this.checkReservation(columnIndex+1, rowIndex+1)}
+                      onClick={(e)=>{
+                      this._onSelectSeat(columnIndex+1, rowIndex+1);
                     }}> {this.seatName(columnIndex, rowIndex)}
                     </button>
                   );
@@ -75,8 +107,17 @@ class Booking extends Component {
         </div>
 
         <div>
-          <button onClick={function(){
-            console.log('do submit api request');
+          <button onClick={() => {
+              const api = new BAapi();
+              const data = {
+                 reservation: {
+                    flight_id: this.state.flight.id,
+                    user_id: 2,
+                    seat_row: this.state.selectedSeat.row,
+                    seat_column: this.state.selectedSeat.column
+                 }
+              }
+              api.addReservation(data);
           }}>Submit
           </button>
         </div>

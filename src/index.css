@@ -23,6 +23,11 @@ body {
   color: #fff;
 }
 
+button:disabled{
+  background: DarkGrey;
+  color: #fff;
+}
+
 .board-row:after {
   clear: both;
   content: "";
