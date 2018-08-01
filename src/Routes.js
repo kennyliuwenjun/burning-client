@@ -7,7 +7,7 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 
 const Routes = (
-  <BrowserRouter>
+  <BrowserRouter basename="https://kennyliuwenjun.github.io/burning-client">
     <div>
       <Route exact path="/" component={ BurningAirlines } />
       <Route exact path="/booking/:id" component={ Booking } />
