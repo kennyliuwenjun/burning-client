@@ -1,136 +1,111 @@
-import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-import 'react-datepicker/dist/react-datepicker.css';
-
+import React, {Component} from 'react';
+import axios from 'axios';
+import BAapi from '../utilities/BAapi'
 import './FlightSearch.css';
+import { Link } from 'react-router-dom';
 
-class FlightSearch  extends Component {
+class FlightSearch extends Component {
   constructor(props) {
     super(props);
+    // get user info from props if available
+    let user;
+    if (props.location.state && props.location.state.referrer) {
+      user = props.location.state.referrer;
+    }
 
     this.state = {
-      returnTrip: true,
-      departureDate: moment(),
-      returnDate: moment().add(1, 'day'),
-      passengers: 1
-    }
+      flights: [],
+      user: !user ? null : user // store user info in state if available
+    };
+
+    this._handleSubmit = this._handleSubmit.bind(this);
+    this.updateResults = this.updateResults.bind(this);
   }
-  handleTrip(tab) {
-      let returnTrip = (tab === 1) ? false : true;
-      this.setState({returnTrip});
+
+  /// get the input values and perform the submit action //
+
+  _handleSubmit(event) {
+    event.preventDefault();
+    //debugger;
+
+    console.log(this.state.flights);
+    const Search = {
+      from: this.from.value,
+      to: this.to.value
+
     }
 
-    changeDepartureDate(departureDate) {
-      this.setState({departureDate: moment(departureDate._d)});
-    }
+    // call api to find flights here
 
-    changeReturnDate(returnDate) {
-      this.setState({returnDate: moment(returnDate._d)});
-    }
+    console.log(Search);
+    const allFlights = new BAapi();
+    allFlights.searchFlights(Search, this.updateResults)
+  }
 
-    incrementPassengers() {
-      this.setState({
-        passengers: this.state.passengers + 1
-      });
-    }
-
-    decrementPassengers() {
-      if (this.state.passengers > 0) {
-        this.setState({
-          passengers: this.state.passengers - 1
-        });
-      }
-    }
-
-    handleSearch(event) {
-      const { store } = this.context;
-      store.dispatch({
-        type: 'ALL',
-        returnTrip: this.state.returnTrip,
-        originCity: this.originCity.value,
-        destinationCity: this.destinationCity.value,
-        departureDate: this.state.departureDate,
-        returnDate: this.state.returnDate,
-        passengers: this.state.passengers,
-        // price: this.state.price
-      });
-      event.preventDefault();
-    }
+  updateResults(results) {
+    this.setState({flights: results.data});
+    //console.log(results)
+  }
+  /// creating the form for flights /
   render() {
+    return (<div className="search__box">
+
+      <form className="form" onSubmit={this._handleSubmit}>
+        <input className="input block" type="Search" placeholder="Enter Origin City" ref={node => {
+            this.from = node;
+          }}/>
+
+        <input className="input block" type="Search" placeholder="Enter Destination City" ref={node => {
+            this.to = node;
+          }}/>
+
+        <button className="form__submit" type="submit">Search</button>
+
+      </form>
+      <ShowFlights flights={this.state.flights}/>
+    </div>);
+  }
+}
+
+/// show the flights after search //
+class ShowFlights extends Component {
+
+// map all flights and render by id
+  render() {
+    return (<div>{this.props.flights.map((f) => <FlightListing flight={f} key={f.id}/>)}</div>);
+  }
+
+}
+
+class FlightListing extends Component {
+// display selected flight/object data
+  render() {
+    const {flight_number, depart_dt, seats_left} = this.props.flight
     return (
-      <div className="search__box">
-        <ul className="tabs">
-          <li className={"tab" + (this.state.returnTrip ? '' : ' active')}
-            onClick={this.handleTrip.bind(this, 1)}>One way</li>
-          <li className={"tab" + (this.state.returnTrip ? ' active' : '')}
-            onClick={this.handleTrip.bind(this, 2)}>Return</li>
-        </ul>
+      <div>
+        <table>
+          <thead>
+            <tr>
+               <th>Flight Number:</th>
+               <th>Number of Seats:</th>
+               <th>Depart Time:</th>
+            </tr>
+          </thead>
 
-        <form className="form" onSubmit={this.handleSearch.bind(this)}>
-          <input
-            className="input block"
-            type="text"
-            placeholder="Enter Origin City"
-            ref={node => {
-              this.originCity = node;
-            }} />
-
-          <input
-            className="input block"
-            type="text"
-            placeholder="Enter Destination City"
-            ref={node => {
-              this.destinationCity = node;
-            }} />
-
-            <br />
-            <br />
-          <div>
-            <label className="block">Departure date</label>
-            <DatePicker
-              className="input"
-              selected={this.state.departureDate}
-              onChange={this.changeDepartureDate.bind(this)} />
-          </div>
-
-          <br />
-
-          { this.state.returnTrip &&
-          <div>
-            <label className="block">Return date</label>
-            <DatePicker
-              className="input"
-              selected={this.state.returnDate}
-              onChange={this.changeReturnDate.bind(this)} />
-            </div>
-          }
-
-          <div className="passengers">
-            <span className="passenger__count">{this.state.passengers} passenger</span>
-
-            <button
-              type="button"
-              className="button"
-              onClick={this.decrementPassengers.bind(this)}>
-              -
-            </button>
-
-            <button
-              type="button"
-              className="button"
-              onClick={this.incrementPassengers.bind(this)}>
-              +
-            </button>
-          </div>
-
-          <button className="form__submit" type="submit">Search</button>
-
-        </form>
-
+          <tbody>
+            <tr>
+             <td>{flight_number}</td>
+             <td>{seats_left}</td>
+             <td>{depart_dt}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="button-container">
+          <button className="booking"><Link to="#"></Link>Booking</button>
+        </div>
       </div>
-    );
+
+   )
   }
 }
 

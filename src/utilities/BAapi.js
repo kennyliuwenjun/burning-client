@@ -1,15 +1,22 @@
 import axios from 'axios';
 
-const SERVEL_URL = 'https://thawing-headland-81437.herokuapp.com';
+const SERVER_URL = 'https://thawing-headland-81437.herokuapp.com';
 
 class BAapi {
   getFlightInfo(id, callback) {
     axios.get(`${SERVEL_URL}/flights/${id}.json`).then( callback );
   };
 
-  searchFlights(from, to) {
-    //miseal
+  searchFlights(data, callback) {
+    const search = SERVER_URL + "/flights/search"
+    console.log('this shit is working')
+    axios.post(search, data).then(callback)
   };
+
+  login(data, callback) {
+    const loginURL = SERVER_URL + '/login.json'
+    axios.post( loginURL, data ).then(callback);
+  }
 
   //remember to: import BAapi from '../utilities/BAapi'
   //in yout component
