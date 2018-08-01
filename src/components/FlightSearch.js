@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import BAapi from '../utilities/BAapi'
 import './FlightSearch.css';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 class FlightSearch extends Component {
   constructor(props) {
@@ -15,14 +15,16 @@ class FlightSearch extends Component {
 
     this.state = {
       flights: [],
-      user: !user ? null : user // store user info in state if available
+      user: !user
+        ? null
+        : user // store user info in state if available
     };
 
     this._handleSubmit = this._handleSubmit.bind(this);
     this.updateResults = this.updateResults.bind(this);
   }
 
-  /// get the input values and perform the submit action //
+  /// get the input values and perform the submit action
 
   _handleSubmit(event) {
     event.preventDefault();
@@ -48,8 +50,12 @@ class FlightSearch extends Component {
   }
   /// creating the form for flights /
   render() {
-    return (<div className="search__box">
 
+    return (
+
+
+    <div className="search__box">
+      <h1>Find your flight</h1>
       <form className="form" onSubmit={this._handleSubmit}>
         <input className="input block" type="Search" placeholder="Enter Origin City" ref={node => {
             this.from = node;
@@ -62,50 +68,57 @@ class FlightSearch extends Component {
         <button className="form__submit" type="submit">Search</button>
 
       </form>
-      <ShowFlights flights={this.state.flights}/>
+      <ShowFlights flights={this.state.flights} user={this.state.user}/>
     </div>);
   }
 }
 
-/// show the flights after search //
+/// show the flights after search
 class ShowFlights extends Component {
 
-// map all flights and render by id
+  // map all flights and render by id
   render() {
-    return (<div>{this.props.flights.map((f) => <FlightListing flight={f} key={f.id}/>)}</div>);
+    if (this.props.flights.length > 0) {
+     const user = this.props.user
+
+      return (<div>
+        <table>
+          <thead>
+            <tr>
+              <th>Flight Number:</th>
+              <th>Number of Seats:</th>
+              <th>Depart Time:</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {this.props.flights.map((f) => <FlightListing flight={f} key={f.id} user={ user } />)}
+          </tbody>
+        </table>
+      </div>);
+    } else {
+      return (<div></div>)
+    }
   }
 
 }
 
 class FlightListing extends Component {
-// display selected flight/object data
+  // display selected flight/object data
   render() {
-    const {flight_number, depart_dt, seats_left} = this.props.flight
-    return (
-      <div>
-        <table>
-          <thead>
-            <tr>
-               <th>Flight Number:</th>
-               <th>Number of Seats:</th>
-               <th>Depart Time:</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-             <td>{flight_number}</td>
-             <td>{seats_left}</td>
-             <td>{depart_dt}</td>
-            </tr>
-          </tbody>
-        </table>
+    const {flight_number, depart_dt, seats_left, id} = this.props.flight
+    return (<tr>
+      <td>{flight_number}</td>
+      <td>{seats_left}</td>
+      <td>{depart_dt}</td>
+      <td>
         <div className="button-container">
-          <button className="booking"><Link to="#"></Link>Booking</button>
+          <Link to={ {pathname: '/booking/' + id, state: { referrer: this.props.user }} }><button className="booking">
+            Booking</button></Link>
         </div>
-      </div>
-
-   )
+      </td>
+    </tr>)
   }
 }
 
