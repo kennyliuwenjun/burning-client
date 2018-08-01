@@ -13,6 +13,11 @@ class BAapi {
     axios.post(search, data).then(callback)
   };
 
+  login(data, callback) {
+    const loginURL = SERVER_URL + '/login.json'
+    axios.post( loginURL, data ).then(callback);
+  }
+
   //remember to: import BAapi from '../utilities/BAapi'
   //in yout component
 }

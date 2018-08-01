@@ -7,9 +7,15 @@ import { Link } from 'react-router-dom';
 class FlightSearch extends Component {
   constructor(props) {
     super(props);
+    // get user info from props if available
+    let user;
+    if (props.location.state && props.location.state.referrer) {
+      user = props.location.state.referrer;
+    }
 
     this.state = {
-      flights: []
+      flights: [],
+      user: !user ? null : user // store user info in state if available
     };
 
     this._handleSubmit = this._handleSubmit.bind(this);
