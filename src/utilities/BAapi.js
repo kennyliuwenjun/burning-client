@@ -16,7 +16,7 @@ class BAapi {
     axios.post(search, data).then(callback)
   };
 
-  //Time
+  //Tim
   login(data, callback) {
     const loginURL = SERVER_URL + '/login.json'
     axios.post( loginURL, data ).then(callback);
