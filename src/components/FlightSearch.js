@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import BAapi from '../utilities/BAapi'
 import './FlightSearch.css';
 import {Link} from 'react-router-dom';
+import { PacmanLoader } from 'react-spinners';
 
 class FlightSearch extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class FlightSearch extends Component {
     }
 
     this.state = {
+      loading: false,
       flights: [],
       user: !user ? null: user // store user info in state if available
     };
@@ -34,15 +36,16 @@ class FlightSearch extends Component {
 
     }
 
+    // set loading state true
+    this.setState({loading: true});
     // call api to find flights here
-
     console.log(Search);
     const allFlights = new BAapi();
     allFlights.searchFlights(Search, this.updateResults)
   }
 
   updateResults(results) {
-    this.setState({flights: results.data});
+    this.setState({flights: results.data, loading: false});
     //console.log(results)
   }
   /// creating the form for flights /
@@ -65,7 +68,7 @@ class FlightSearch extends Component {
         <button className="form__submit" type="submit">Search</button>
 
       </form>
-      <ShowFlights flights={this.state.flights} user={this.state.user}/>
+      <ShowFlights flights={this.state.flights} user={this.state.user} loading={this.state.loading}/>
     </div>);
   }
 }
@@ -95,7 +98,15 @@ class ShowFlights extends Component {
         </table>
       </div>);
     } else {
-      return (<div></div>)
+      return (
+
+        <div className="loader-center">
+           <PacmanLoader
+           color={'#eb754a'}
+           loading={this.props.loading}
+           />
+       </div>
+    )
     }
   }
 
