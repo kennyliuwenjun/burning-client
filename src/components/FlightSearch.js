@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import BAapi from '../utilities/BAapi'
 import './FlightSearch.css';
 import {Link} from 'react-router-dom';
@@ -17,9 +16,7 @@ class FlightSearch extends Component {
     this.state = {
       loading: false,
       flights: [],
-      user: !user
-        ? null
-        : user // store user info in state if available
+      user: !user ? null: user // store user info in state if available
     };
 
     this._handleSubmit = this._handleSubmit.bind(this);

@@ -4,6 +4,7 @@ import BurningAirlines from './components/BurningAirlines';
 import Booking from './components/Booking';
 import FlightSearch from './components/FlightSearch'
 import Login from './components/Login'
+import SignUp from './components/SignUp'
 
 const Routes = (
   <BrowserRouter>
@@ -12,6 +13,7 @@ const Routes = (
       <Route exact path="/booking/:id" component={ Booking } />
       <Route exact path="/flight_search" component={ FlightSearch } />
       <Route exact path="/login" component={ Login } />
+      <Route exact path="/signup" component={ SignUp } />
     </div>
   </BrowserRouter>
 );

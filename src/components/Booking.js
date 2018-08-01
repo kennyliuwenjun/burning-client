@@ -6,12 +6,15 @@ import BAapi from '../utilities/BAapi'
 class Booking extends Component {
   constructor(props){
     super();
+
+    // get user from session
+    let user;
+    if (props.location.state && props.location.state.referrer) {
+      user = props.location.state.referrer;
+    }
+
     this.state = {
-      //testing user
-      user: {
-        id: 1,
-        name: 'Bob',
-      },
+      user: !user ? null : user, // store user info in state if available
       flight: {},
       seatsInRow: [],
       selectedSeat : {}
@@ -112,7 +115,7 @@ class Booking extends Component {
               const data = {
                  reservation: {
                     flight_id: this.state.flight.id,
-                    user_id: 2,
+                    user_id: this.state.user.id,
                     seat_row: this.state.selectedSeat.row,
                     seat_column: this.state.selectedSeat.column
                  }
