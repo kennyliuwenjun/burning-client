@@ -1,14 +1,16 @@
 import axios from 'axios';
 
-const SERVEL_URL = 'https://thawing-headland-81437.herokuapp.com';
+const SERVER_URL = 'https://thawing-headland-81437.herokuapp.com';
 
 class BAapi {
   searchFlight(id) {
     //kenny
   };
 
-  searchFlights(from, to) {
-    //miseal
+  searchFlights(data, callback) {
+    const search = SERVER_URL + "/flights/search"
+    console.log('this shit is working')
+    axios.post(search, data).then(callback)
   };
 
   //remember to: import BAapi from '../utilities/BAapi'

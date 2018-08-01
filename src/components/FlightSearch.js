@@ -1,92 +1,106 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import BAapi from '../utilities/BAapi'
 import './FlightSearch.css';
+import { Link } from 'react-router-dom';
 
 class FlightSearch extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      flights: [
-        {
-          id: 3,
-          flight_number: "BA213",
-          from: "Sydney",
-          to: "Melbourne",
-          rows: 6,
-          columns: 6,
-          seats_left: 35
-        }, {
-          id: 4,
-          flight_number: "B123",
-          from: "Sydney",
-          to: "Melbourne",
-          rows: 6,
-          columns: 6,
-          seats_left: 36
-        }
-      ],
-      searchString: {
-        from: "SYD",
-        to: "MEL"
-      }
+      flights: []
     };
-    // this._handleSubmit = this._handleSubmit.bind(this);
+
     this._handleSubmit = this._handleSubmit.bind(this);
-
+    this.updateResults = this.updateResults.bind(this);
   }
 
-  // _handleInput(event) {
-  //   this.setState({flights: event.target.value});
-  // }
-
-  componentDidMount() {
-
-    const flightString = this.setState({searchString: flightString});
-  }
+  /// get the input values and perform the submit action //
 
   _handleSubmit(event) {
     event.preventDefault();
     //debugger;
-    // this.props.onSubmit(this.state.flights);
 
     console.log(this.state.flights);
     const Search = {
-      originCity: this.originCity.value,
-      destinationCity: this.destinationCity.value
+      from: this.from.value,
+      to: this.to.value
 
     }
 
     // call api to find flights here
-    console.log(Search);
 
+    console.log(Search);
+    const allFlights = new BAapi();
+    allFlights.searchFlights(Search, this.updateResults)
   }
+
+  updateResults(results) {
+    this.setState({flights: results.data});
+    //console.log(results)
+  }
+  /// creating the form for flights /
   render() {
     return (<div className="search__box">
 
       <form className="form" onSubmit={this._handleSubmit}>
         <input className="input block" type="Search" placeholder="Enter Origin City" ref={node => {
-            this.originCity = node;
+            this.from = node;
           }}/>
 
         <input className="input block" type="Search" placeholder="Enter Destination City" ref={node => {
-            this.destinationCity = node;
+            this.to = node;
           }}/>
 
         <button className="form__submit" type="submit">Search</button>
 
       </form>
-      <ShowFlights flights={this.state.flights} />
+      <ShowFlights flights={this.state.flights}/>
     </div>);
   }
 }
 
+/// show the flights after search //
 class ShowFlights extends Component {
 
+// map all flights and render by id
   render() {
-    return (<div>{this.props.flights.map((f)=> <div>{f.flight_number}</div>)}</div>);
+    return (<div>{this.props.flights.map((f) => <FlightListing flight={f} key={f.id}/>)}</div>);
   }
 
+}
+
+class FlightListing extends Component {
+// display selected flight/object data
+  render() {
+    const {flight_number, depart_dt, seats_left} = this.props.flight
+    return (
+      <div>
+        <table>
+          <thead>
+            <tr>
+               <th>Flight Number:</th>
+               <th>Number of Seats:</th>
+               <th>Depart Time:</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+             <td>{flight_number}</td>
+             <td>{seats_left}</td>
+             <td>{depart_dt}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="button-container">
+          <button className="booking"><Link to="#"></Link>Booking</button>
+        </div>
+      </div>
+
+   )
+  }
 }
 
 export default FlightSearch;
