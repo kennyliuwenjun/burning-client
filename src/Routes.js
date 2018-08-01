@@ -7,13 +7,13 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 
 const Routes = (
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     <div>
-      <Route exact path={process.env.PUBLIC_URL + '/'} component={ BurningAirlines } />
-      <Route exact path={process.env.PUBLIC_URL + '/booking/:id'} component={ Booking } />
-      <Route exact path={process.env.PUBLIC_URL + '/flight_search'} component={ FlightSearch } />
-      <Route exact path={process.env.PUBLIC_URL + '/login'} component={ Login } />
-      <Route exact path={process.env.PUBLIC_URL + '/signup'} component={ SignUp } />
+      <Route exact path="/" component={ BurningAirlines } />
+      <Route exact path="/booking/:id" component={ Booking } />
+      <Route exact path="/flight_search" component={ FlightSearch } />
+      <Route exact path="/login" component={ Login } />
+      <Route exact path="/signup" component={ SignUp } />
     </div>
   </BrowserRouter>
 );
