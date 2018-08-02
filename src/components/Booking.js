@@ -67,12 +67,14 @@ class Booking extends Component {
     });
   }
 
-  checkReservation(column, row){
-    for (let i=0; i<this.state.flight.reservations.length; i++) {
-      if (this.state.flight.reservations[i].column === column && this.state.flight.reservations[i].row === row){
-        return true;
+  getReservation(column, row){
+    const ress = this.state.flight.reservations
+    for (let i=0; i<ress.length; i++) {
+      if (ress[i].column === column && ress[i].row === row){
+        return ress[i];
       };
     }
+    return false;
   }
 
 
@@ -93,11 +95,12 @@ class Booking extends Component {
             return (
               <div key={rowIndex} className="board-row">
                 {row.map((column, columnIndex) => {
+                  const reservation = this.getReservation(columnIndex + 1, rowIndex + 1);
                   return (
-                    <button
+                    <button title={ reservation.name || "Free Seat" }
                       key={columnIndex}
                       className = {this.checkActiveBtn(columnIndex+1, rowIndex+1)}
-                      disabled = {this.checkReservation(columnIndex+1, rowIndex+1)}
+                      disabled={ !!reservation }
                       onClick={(e)=>{
                       this._onSelectSeat(columnIndex+1, rowIndex+1);
                     }}> {this.seatName(columnIndex, rowIndex)}
