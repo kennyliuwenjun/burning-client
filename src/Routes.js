@@ -10,13 +10,12 @@ const Routes = (
   // <Router basename={process.env.PUBLIC_URL}>
   <Router>
     <div>
+      <Route exact path="/*" component={BurningAirlines} />
       <Switch>
-        <Route exact path="/" component={ BurningAirlines } />
         <Route path="/booking/:id" component={ Booking } />
         <Route path="/flight_search" component={ FlightSearch } />
         <Route path="/login" component={ Login } />
         <Route path="/signup" component={ SignUp } />
-        <Route exact path="/*" component={BurningAirlines} />
       </Switch>
     </div>
   </Router>

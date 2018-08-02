@@ -4,20 +4,17 @@ import { Link } from 'react-router-dom';
 class BurningAirlines extends Component {
   render() {
     return (
-      <div>
-        <h1>Home Page</h1>
+      <div className="nav">
         <div>
+          <h1>Burning Airlines</h1>
+          <h2>Where prices crash and burn!</h2>
+        </div>
+        <nav>
           <Link to="/flight_search">FlightSearch</Link>
-        </div>
-        <div>
-          <Link to="#booking/2">Booking</Link>
-        </div>
-        <div>
-          <Link to="login">Login</Link>
-        </div>
-        <div>
-          <Link to="signup">Sign Up</Link>
-        </div>
+          <Link to="/booking/2">Booking</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/signup">Sign Up</Link>
+        </nav>
       </div>
     );
   }

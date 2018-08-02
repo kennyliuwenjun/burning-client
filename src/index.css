@@ -33,3 +33,66 @@ button:disabled{
   content: "";
   display: table;
 }
+
+
+.nav {
+  padding-left: 1em;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  background-color: orange;
+}
+
+.nav h1 {
+  margin-bottom: 0;
+  animation: burn 1s alternate linear infinite;
+}
+
+@keyframes burn {
+  0% {
+    transform: skew(-2deg, -2deg);
+    color: black;
+  }
+
+  25% {
+    transform: skew(-2deg, -2deg);
+    color: red;
+  }
+
+  50% {
+    transform: skew(0deg, 0deg);
+    color: darkorange
+  }
+
+  75% {
+    transform: skew(1deg, 1deg);
+    color: lightblue;
+  }
+
+  100% {
+    transform: skew(2deg, 2deg);
+    color: white;
+  }
+}
+.nav h2 {
+  margin-top: 0;
+}
+.nav nav {
+  margin: auto 0;
+}
+.nav nav a {
+  border-radius: .25em;
+  line-height: 2em;
+  margin: .25em 1em;
+  padding: .5em;
+  background-color: red;
+  display: inline-block;
+  color: white;
+  transition: color .5s, background-color .5s;
+}
+
+.nav nav a:hover {
+  background-color: yellow;
+  color: black;
+}
