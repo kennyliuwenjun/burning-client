@@ -15,16 +15,44 @@ class FlightSearch extends Component {
 
     this.state = {
       loading: false,
+      airports: {
+        from: [],
+        to: []
+      },
       flights: [],
       user: !user ? null: user // store user info in state if available
     };
 
     this._handleSubmit = this._handleSubmit.bind(this);
     this.updateResults = this.updateResults.bind(this);
+    this.parseAirports = this.parseAirports.bind(this);
+
+
+    this.getValidAirports();
   }
 
-  /// get the input values and perform the submit action
+  parseAirports( response ) {
+    const flights = response.data;
+    const a = {
+      from: [],
+      to: []
+    }
 
+    flights.forEach( (f) => {
+      if( !a.from.includes(f.from) ) a.from.push(f.from);
+      if( !a.to.includes(f.to) ) a.to.push(f.to);
+    });
+
+    this.setState( { airports: a })
+
+  }
+
+  getValidAirports() {
+    const api = new BAapi();
+    api.getAllFlights(this.parseAirports);
+  }
+
+  // get the input values and perform the submit action
   _handleSubmit(event) {
     event.preventDefault();
     //debugger;
@@ -48,6 +76,15 @@ class FlightSearch extends Component {
     this.setState({flights: results.data, loading: false});
     //console.log(results)
   }
+
+  optionForSelect( text, value ) {
+    value = value ? value : text; //use text for value if not provided
+
+    return (
+      <option key={ value } value={ value }>{ text }</option>
+    )
+  }
+
   /// creating the form for flights /
   render() {
 
@@ -57,13 +94,15 @@ class FlightSearch extends Component {
     <div className="search__box">
       <h1>Find your flight</h1>
       <form className="form" onSubmit={this._handleSubmit}>
-        <input className="input block" type="Search" placeholder="Enter Origin City" ref={node => {
-            this.from = node;
-          }}/>
+        <select className="input block" ref={node => {this.from = node;}}  required >
+          <option value="" >Select Origin City</option>
+          {this.state.airports.from.map( (a) => this.optionForSelect(a) )}
+        </select>
 
-        <input className="input block" type="Search" placeholder="Enter Destination City" ref={node => {
-            this.to = node;
-          }}/>
+          <select className="input block" ref={node => { this.to = node; }} required >
+          <option value="" >Select Destination City</option>
+          {this.state.airports.to.map((a) => this.optionForSelect(a))}
+        </select>
 
         <button className="form__submit" type="submit">Search</button>
 

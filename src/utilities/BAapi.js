@@ -32,6 +32,11 @@ class BAapi {
     axios.post(SERVER_URL + "/reservations.json", data).then(callback)
   };
 
+  getAllFlights(callback) {
+    const flights = SERVER_URL + "/flights.json"
+    axios.get(flights).then(callback)
+  }
+
   //remember to: import BAapi from '../utilities/BAapi'
   //in yout component
 }
